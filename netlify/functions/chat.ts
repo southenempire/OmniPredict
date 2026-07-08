@@ -1,21 +1,18 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+export const handler = async (event: any) => {
+  if (event.httpMethod !== 'POST') {
+    return { statusCode: 405, body: JSON.stringify({ error: 'Method not allowed' }) };
   }
 
   try {
-    const { message } = req.body;
-
+    const { message } = JSON.parse(event.body || '{}');
     if (!message) {
-      return res.status(400).json({ error: 'Message is required' });
+      return { statusCode: 400, body: JSON.stringify({ error: 'Message is required' }) };
     }
 
-    const GROQ_API_KEY = process.env.GROQ_API_KEY;
+    const GROQ_API_KEY = process.env.VITE_AI_API_KEY;
 
     if (!GROQ_API_KEY) {
-      return res.status(500).json({ error: 'GROQ_API_KEY is not configured' });
+      return { statusCode: 500, body: JSON.stringify({ error: 'API key is not configured' }) };
     }
 
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -45,14 +42,17 @@ Keep your responses short, hacker-themed, and confident. Always include a percen
     if (!response.ok) {
       const errorData = await response.text();
       console.error('Groq API Error:', errorData);
-      return res.status(500).json({ error: 'Failed to fetch from Groq API' });
+      return { statusCode: 500, body: JSON.stringify({ error: 'Failed to fetch from Groq API' }) };
     }
 
     const data = await response.json();
-    return res.status(200).json({ response: data.choices[0].message.content });
+    return { 
+      statusCode: 200, 
+      body: JSON.stringify({ response: data.choices[0].message.content }) 
+    };
 
   } catch (error) {
     console.error('Server error:', error);
-    return res.status(500).json({ error: 'Internal server error' });
+    return { statusCode: 500, body: JSON.stringify({ error: 'Internal server error' }) };
   }
-}
+};

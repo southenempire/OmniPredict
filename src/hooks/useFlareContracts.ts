@@ -175,9 +175,44 @@ export function useFlareContracts() {
     }
   };
 
-  const cashOut = (tradeId: string) => {
-    setTrades(prev => prev.filter(t => t.id !== tradeId));
-    alert('Successfully cashed out your position!');
+  const cashOut = async (tradeId: string) => {
+    const trade = trades.find(t => t.id === tradeId);
+    if (!trade) return;
+
+    const wallet = wallets[0];
+    if (!wallet) {
+      alert("Please connect your wallet first!");
+      return;
+    }
+
+    try {
+      await wallet.switchChain(flareTestnet.id);
+      const provider = await wallet.getEthereumProvider();
+      
+      const walletClient = createWalletClient({
+        account: wallet.address as `0x${string}`,
+        chain: flareTestnet,
+        transport: custom(provider)
+      });
+
+      const hash = await walletClient.writeContract({
+        address: MARKET_ADDRESS,
+        abi: OmniPredictMarketABI.abi,
+        functionName: 'claimWinnings',
+        args: [BigInt(trade.marketId)]
+      });
+
+      // Wait for transaction locally via publicClient
+      await publicClient.waitForTransactionReceipt({ hash });
+
+      setTrades(prev => prev.filter(t => t.id !== tradeId));
+      alert(`Successfully claimed winnings for market ${trade.marketId}! Hash: ${hash.slice(0,10)}...`);
+      
+      fetchMarkets();
+    } catch (err: any) {
+      console.error("Claim transaction failed:", err);
+      alert(`Claim failed: ${err.shortMessage || err.message || 'Unknown error'}`);
+    }
   };
 
   const updateProfile = (updates: Partial<UserProfile>) => {

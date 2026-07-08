@@ -24,7 +24,14 @@ export const Dashboard = () => {
   const { ready, authenticated, user, login, logout } = usePrivy();
   const isWalletConnected = authenticated;
   const [activeFilter, setActiveFilter] = useState<MarketType | 'all' | 'trades' | 'profile' | 'terminal'>('all');
+  const [cashingOutId, setCashingOutId] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  const handleCashOut = async (tradeId: string) => {
+    setCashingOutId(tradeId);
+    await cashOut(tradeId);
+    setCashingOutId(null);
+  };
 
   const filteredMarkets = markets.filter(m => activeFilter === 'all' || m.type === activeFilter);
 
@@ -162,8 +169,13 @@ export const Dashboard = () => {
                       <h3 className="trade-card__title">{market?.title || 'Unknown Market'}</h3>
                       <div className="trade-card__footer">
                         <div>Staked: <strong>{trade.amount} FLR</strong></div>
-                        <button className="lp-btn lp-btn--outline" style={{ padding: '.4rem 1rem', fontSize: '.8rem' }} onClick={() => cashOut(trade.id)}>
-                          Cash Out
+                        <button 
+                          className="lp-btn lp-btn--outline" 
+                          style={{ padding: '.4rem 1rem', fontSize: '.8rem' }} 
+                          onClick={() => handleCashOut(trade.id)}
+                          disabled={cashingOutId === trade.id}
+                        >
+                          {cashingOutId === trade.id ? 'Claiming...' : 'Cash Out'}
                         </button>
                       </div>
                     </div>
