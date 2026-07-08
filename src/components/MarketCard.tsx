@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChartLine, faSun, faCoins, faHourglassHalf } from '@fortawesome/free-solid-svg-icons';
+import { faChartLine, faSun, faCoins, faHourglassHalf, faCommentDots } from '@fortawesome/free-solid-svg-icons';
 import { type Market } from '../hooks/useFlareContracts';
 
 interface MarketCardProps {
@@ -10,9 +10,12 @@ interface MarketCardProps {
 }
 
 export const MarketCard: React.FC<MarketCardProps> = ({ market, onBet, onClick }) => {
+  const [betAmount, setBetAmount] = useState<number>(100);
+
   const handleBetClick = (e: React.MouseEvent, prediction: 'yes' | 'no') => {
     e.stopPropagation();
-    onBet(market.id, prediction, 100);
+    if (betAmount <= 0) return alert("Amount must be greater than 0");
+    onBet(market.id, prediction, betAmount);
   };
 
   const yesPct = (market.yesOdds * 100).toFixed(0);
@@ -55,11 +58,24 @@ export const MarketCard: React.FC<MarketCardProps> = ({ market, onBet, onClick }
       <div className="market-stats">
         <div className="market-liquidity">
           <FontAwesomeIcon icon={faCoins} />
-          <span>{market.liquidityFAsset.toLocaleString()} F-XRP Pool</span>
+          <span>{market.liquidityFAsset.toLocaleString()} FLR Pool</span>
         </div>
         <div>
           <FontAwesomeIcon icon={faHourglassHalf} /> {new Date(market.endTime).toLocaleDateString()}
         </div>
+      </div>
+
+      {/* Amount Input */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', background: 'rgba(255,255,255,0.03)', padding: '0.5rem', borderRadius: '0.5rem', border: '1px solid rgba(255,255,255,0.1)' }} onClick={e => e.stopPropagation()}>
+        <span style={{ color: 'var(--muted)', fontSize: '0.8rem', fontWeight: 600 }}>Amount:</span>
+        <input 
+          type="number" 
+          value={betAmount} 
+          onChange={(e) => setBetAmount(Number(e.target.value))}
+          style={{ background: 'transparent', border: 'none', color: 'white', flex: 1, outline: 'none', fontSize: '0.9rem' }}
+          min="1"
+        />
+        <span style={{ color: 'var(--flare)', fontSize: '0.8rem', fontWeight: 700 }}>FLR</span>
       </div>
 
       {/* Bet buttons */}
@@ -74,9 +90,22 @@ export const MarketCard: React.FC<MarketCardProps> = ({ market, onBet, onClick }
         </button>
       </div>
 
-      {/* Resolution badge */}
-      <div className="flare-badge">
-        ⚡ Secured by {market.resolutionSource}
+      {/* Resolution badge and feedback */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
+        <div className="flare-badge" style={{ margin: 0 }}>
+          ⚡ Secured by {market.resolutionSource}
+        </div>
+        <a 
+          href="https://forms.gle/W321ovNaBx4uzSgu6" 
+          target="_blank" 
+          rel="noreferrer" 
+          onClick={e => e.stopPropagation()}
+          style={{ fontSize: '0.75rem', color: 'var(--muted)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.3rem', transition: 'color 0.2s' }}
+          onMouseOver={e => { e.currentTarget.style.color = 'var(--text)'; }}
+          onMouseOut={e => { e.currentTarget.style.color = 'var(--muted)'; }}
+        >
+          <FontAwesomeIcon icon={faCommentDots} /> Feedback
+        </a>
       </div>
     </div>
   );

@@ -161,7 +161,7 @@ export const Dashboard = () => {
                       </div>
                       <h3 className="trade-card__title">{market?.title || 'Unknown Market'}</h3>
                       <div className="trade-card__footer">
-                        <div>Staked: <strong>{trade.amount} F-XRP</strong></div>
+                        <div>Staked: <strong>{trade.amount} FLR</strong></div>
                         <button className="lp-btn lp-btn--outline" style={{ padding: '.4rem 1rem', fontSize: '.8rem' }} onClick={() => cashOut(trade.id)}>
                           Cash Out
                         </button>
