@@ -2427,3 +2427,13 @@ input:focus, textarea:focus {
   0%, 100% { opacity: 0; }
   50% { opacity: 1; }
 }
+
+/* Hide number input arrows/spinners */
+.hide-arrows::-webkit-inner-spin-button, 
+.hide-arrows::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+.hide-arrows {
+  -moz-appearance: textfield;
+}

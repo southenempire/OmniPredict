@@ -69,11 +69,16 @@ export const MarketCard: React.FC<MarketCardProps> = ({ market, onBet, onClick }
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', background: 'rgba(255,255,255,0.03)', padding: '0.5rem', borderRadius: '0.5rem', border: '1px solid rgba(255,255,255,0.1)' }} onClick={e => e.stopPropagation()}>
         <span style={{ color: 'var(--muted)', fontSize: '0.8rem', fontWeight: 600 }}>Amount:</span>
         <input 
+          id={`betAmount-${market.id}`}
+          name={`betAmount-${market.id}`}
           type="number" 
           value={betAmount} 
           onChange={(e) => setBetAmount(Number(e.target.value))}
-          style={{ background: 'transparent', border: 'none', color: 'white', flex: 1, outline: 'none', fontSize: '0.9rem' }}
+          style={{ background: 'transparent', border: 'none', color: 'white', flex: 1, outline: 'none', fontSize: '0.9rem', textAlign: 'right', paddingRight: '0.4rem' }}
           min="1"
+          autoComplete="off"
+          autoCorrect="off"
+          className="hide-arrows"
         />
         <span style={{ color: 'var(--flare)', fontSize: '0.8rem', fontWeight: 700 }}>FLR</span>
       </div>
