@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGlobe, faChartLine, faSun, faArrowLeft, faWallet, faUser, faTerminal, faCircle } from '@fortawesome/free-solid-svg-icons';
+import { faGlobe, faChartLine, faSun, faArrowLeft, faWallet, faUser, faTerminal, faCircle, faCommentDots } from '@fortawesome/free-solid-svg-icons';
 import { useFlareContracts, type MarketType } from '../hooks/useFlareContracts';
 import { MarketCard } from '../components/MarketCard';
 import { TerminalAccessCard } from '../components/TerminalAccessCard';
@@ -74,6 +74,15 @@ export const Dashboard = () => {
               {f.label}
             </a>
           ))}
+          <a
+            className="nav-item"
+            href="https://forms.gle/W321ovNaBx4uzSgu6"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <FontAwesomeIcon icon={faCommentDots} />
+            Feedback
+          </a>
         </nav>
 
         {/* Sidebar promo box */}

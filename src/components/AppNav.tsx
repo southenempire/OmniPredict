@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRight, faBars, faXmark, faChartLine, faDollarSign, faCode } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faBars, faXmark, faChartLine, faDollarSign, faCode, faCommentDots } from '@fortawesome/free-solid-svg-icons';
 
 const NAV_LINKS = [
   { label: 'Markets',  href: '/#markets',  icon: faChartLine },
   { label: 'Pricing',  href: '/#pricing',  icon: faDollarSign },
   { label: 'Docs',     href: '/docs',       icon: faCode },
+  { label: 'Feedback', href: 'https://forms.gle/W321ovNaBx4uzSgu6', icon: faCommentDots, external: true },
 ];
 
 export const AppNav = () => {
@@ -71,7 +72,7 @@ export const AppNav = () => {
             <a
               key={link.label}
               className={pathname === link.href ? 'nav-active-link' : ''}
-              onClick={() => handleNavClick(link.href)}
+              onClick={() => handleNavClick(link.href, link.external)}
               style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
             >
               <FontAwesomeIcon icon={link.icon} style={{ fontSize: '0.75rem', opacity: 0.7 }} />
@@ -101,7 +102,7 @@ export const AppNav = () => {
           {NAV_LINKS.map(link => (
             <a
               key={link.label}
-              onClick={() => handleNavClick(link.href)}
+              onClick={() => handleNavClick(link.href, link.external)}
               style={{ cursor: 'pointer' }}
             >
               <FontAwesomeIcon icon={link.icon} />
