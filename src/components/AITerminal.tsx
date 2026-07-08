@@ -4,7 +4,7 @@ import { faTerminal, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 
 interface Message {
   id: string;
-  sender: 'user' | 'ai';
+  sender: 'user' | 'ai' | 'system';
   text: string;
   timestamp: Date;
 }
@@ -29,19 +29,6 @@ export const AITerminal: React.FC = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages, isTyping]);
-
-  const generateAIResponse = (userText: string) => {
-    const lower = userText.toLowerCase();
-    if (lower.includes('btc') || lower.includes('bitcoin')) {
-      return "Analyzing FTSO momentum for BTC... Current RSI is 68. Momentum is bullish. Probability of crossing $100k in 24h: 62%.";
-    } else if (lower.includes('eth') || lower.includes('ethereum')) {
-      return "FTSO data shows ETH consolidating. Smart contract volume is spiking. Probability of crossing $4k: 45%.";
-    } else if (lower.includes('weather') || lower.includes('london')) {
-      return "Querying Flare Data Connector (FDC) for global weather APIs... London forecast shows a high of 26°C tomorrow. Strong YES recommendation for the London weather market.";
-    } else {
-      return "I am monitoring all Flare network data feeds. Please specify a market (e.g. 'BTC', 'ETH', or 'Weather') for detailed probability analysis.";
-    }
-  };
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
