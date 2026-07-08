@@ -68,7 +68,7 @@ function DocsAIChat() {
       
       const data = await response.json();
       setIsTyping(false);
-      setMessages(prev => [...prev, { role: 'assistant', text: data.reply || data.message || 'Error: Invalid response format from backend.' }]);
+      setMessages(prev => [...prev, { role: 'assistant', text: data.response || data.reply || data.message || 'Error: Invalid response format from backend.' }]);
     } catch (error) {
       setIsTyping(false);
       setMessages(prev => [...prev, { role: 'assistant', text: 'Error connecting to the backend. Please try again later.' }]);
