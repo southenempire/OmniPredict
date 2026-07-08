@@ -6,7 +6,11 @@ export default defineConfig({
   plugins: [react()],
   build: {
     rolldownOptions: {
-      external: ['@solana/kit']
+      external: [
+        '@solana/kit',
+        '@solana-program/system',
+        '@solana-program/token'
+      ]
     }
   }
 })
