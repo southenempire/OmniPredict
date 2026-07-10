@@ -20,7 +20,8 @@ async function main() {
     "BTC",
     100000,
     true,
-    Math.floor(Date.now() / 1000) + 86400
+    Math.floor(Date.now() / 1000) + 86400,
+    { value: ethers.parseEther("10") }
   );
   await tx1.wait();
 
@@ -31,7 +32,8 @@ async function main() {
     "ETH",
     4000,
     true,
-    Math.floor(Date.now() / 1000) + 86400 * 7
+    Math.floor(Date.now() / 1000) + 86400 * 7,
+    { value: ethers.parseEther("10") }
   );
   await tx2.wait();
 
@@ -41,7 +43,8 @@ async function main() {
     "XRP",
     1,
     true,
-    Math.floor(Date.now() / 1000) + 900
+    Math.floor(Date.now() / 1000) + 900,
+    { value: ethers.parseEther("10") }
   );
   await tx3.wait();
 
@@ -51,7 +54,8 @@ async function main() {
     "WTHR_LON",
     25,
     true,
-    Math.floor(Date.now() / 1000) + 86400
+    Math.floor(Date.now() / 1000) + 86400,
+    { value: ethers.parseEther("10") }
   );
   await tx4.wait();
 
@@ -63,7 +67,8 @@ async function main() {
     "WTHR_NBO",
     28,
     true,
-    Math.floor(Date.now() / 1000) + 86400
+    Math.floor(Date.now() / 1000) + 86400,
+    { value: ethers.parseEther("10") }
   );
   await tx5.wait();
 
@@ -72,7 +77,8 @@ async function main() {
     "WTHR_ACC",
     10,
     true,
-    Math.floor(Date.now() / 1000) + 86400 * 7
+    Math.floor(Date.now() / 1000) + 86400 * 7,
+    { value: ethers.parseEther("10") }
   );
   await tx6.wait();
 
@@ -81,7 +87,8 @@ async function main() {
     "WTHR_CPT",
     12,
     false,
-    Math.floor(Date.now() / 1000) + 43200
+    Math.floor(Date.now() / 1000) + 43200,
+    { value: ethers.parseEther("10") }
   );
   await tx7.wait();
 
@@ -90,7 +97,8 @@ async function main() {
     "WTHR_LOS",
     32,
     true,
-    Math.floor(Date.now() / 1000) + 86400
+    Math.floor(Date.now() / 1000) + 86400,
+    { value: ethers.parseEther("10") }
   );
   await tx8.wait();
 

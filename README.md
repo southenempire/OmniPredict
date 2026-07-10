@@ -1,47 +1,111 @@
-# OmniPredict - Flare Network Hackathon
+<div align="center">
+  <img src="public/logo.jpg" alt="OmniPredict Logo" width="120" style="border-radius: 20px;"/>
+  
+  # OmniPredict
+  
+  **The ultimate decentralized prediction market for the Flare Network.** <br/>
+  *Frictionless onboarding. Instant resolution. Professional data density.*
 
-## 🌍 The Problem
-Prediction markets today are largely disconnected from the real world, heavily reliant on trusted central intermediaries, and extremely slow to settle. In emerging markets—especially across Africa—access to reliable, decentralized financial tools to hedge against local economic or environmental risks (like droughts, floods, or extreme weather) is practically non-existent.
+  <br />
 
-## 🚀 The Solution: OmniPredict
-OmniPredict is a fully decentralized, frictionless prediction market built on the **Flare Network**. We combine Flare's unique data acquisition protocols with a seamless Web2-like onboarding experience to create a platform that is ready for mass adoption.
+  [![Built with React](https://img.shields.io/badge/Built_with-React-61DAFB?style=for-the-badge&logo=react)](https://reactjs.org/)
+  [![Powered by Flare](https://img.shields.io/badge/Powered_by-Flare_Network-E70052?style=for-the-badge)](https://flare.network/)
+  [![Auth by Privy](https://img.shields.io/badge/Auth_by-Privy-7B2FFF?style=for-the-badge)](https://privy.io/)
+  [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 
-By utilizing the **Flare Time Series Oracle (FTSO)** and the **Flare Data Connector (FDC)**, OmniPredict allows users to speculate and hedge on both high-frequency crypto assets AND real-world off-chain events (like African weather patterns) with zero central points of failure.
+</div>
 
-### Key Features
-1. **Frictionless Onboarding:** Integrated with **Privy**, users can sign in with just an Email or Google account. No seed phrases required. Behind the scenes, a secure embedded wallet is provisioned on the Flare Coston2 network.
-2. **FTSO Powered Crypto Markets:** Predict whether BTC, ETH, or XRP will cross specific price thresholds. Settlement is instant, decentralized, and mathematically guaranteed by Flare's FTSO data providers.
-3. **FDC Powered Real-World Markets:** Specialized African weather markets (Nairobi, Accra, Cape Town) demonstrating how Web2 API data can be bridged trustlessly to Web3 via the Flare Data Connector.
-4. **OmniAI Terminal:** A premium, built-in AI assistant powered by **Groq**. OmniAI acts as an advanced quantitative analyst, synthesizing FTSO data trends and Web2 data to give users high-probability trading recommendations.
+---
 
-## 🏗️ Architecture
-- **Frontend:** React + Vite, styled with custom sleek CSS.
-- **Web3 Auth:** Privy Embedded Wallets (Email/Social Login -> C2FLR Wallet).
+## 🌍 The Vision
+
+Current prediction markets are either overly complex Web3 labyrinths that alienate mainstream users, or they rely on centralized Oracles that can be easily manipulated. 
+
+**OmniPredict** solves both of these problems. Built exclusively on the **Flare Network**, OmniPredict combines a hyper-optimized, Polymarket-style professional UI with the mathematical security of Flare's **FTSO (Flare Time Series Oracle)** and **FDC (Flare Data Connector)**. 
+
+Whether you are hedging against high-frequency crypto volatility or speculating on localized African weather patterns, OmniPredict offers a seamless, zero-friction Web2 experience powered by bulletproof Web3 infrastructure.
+
+---
+
+## ✨ Core Features
+
+### 1. Frictionless 1-Click UX
+No seed phrases. No gas confusion. No ERC-20 `approve()` nightmares. 
+By integrating **Privy Embedded Wallets** and leveraging **native FLR** for betting, users can sign in with a simple Google account and start trading with 1-click execution.
+
+### 2. High-Density Professional Dashboard
+OmniPredict features a heavily customized, data-dense UI built for serious traders. 
+- Side-by-side execution buttons for rapid betting.
+- A live **Order Book / Activity Feed** simulating real-time volume.
+- Institutional color palette (Trustworthy Blue/Navy) for a premium feel.
+
+### 3. Permissionless Market Creation
+Anyone can be a market maker. Users can pay a **10 FLR anti-spam creation fee** to deploy their own custom markets directly to the blockchain via our intuitive "Launch Market" UI. 
+
+### 4. OmniAI: The Quantitative Scanner
+A premium, built-in AI assistant powered by the lightning-fast **Groq API**. OmniAI acts as an advanced quantitative analyst, synthesizing FTSO data trends and Web2 macro data to give users high-probability trading recommendations and risk analysis.
+
+---
+
+## 🏗️ Technical Architecture
+
+OmniPredict is built on a modern, highly scalable stack:
+
+- **Frontend:** React + Vite + TypeScript.
+- **Styling:** Custom CSS implementing a highly-responsive CSS Grid layout.
+- **Web3 Auth:** Privy (Email/Social Login -> Embedded C2FLR Wallet).
 - **Blockchain:** Flare Coston2 Testnet.
-- **Smart Contracts:** Solidity (Hardhat).
-- **AI Core:** Vercel Serverless Functions + Groq API.
+- **Smart Contracts:** Solidity (Hardhat) utilizing `msg.value` for optimized native routing.
+- **AI Core:** Vercel Serverless Functions + Groq API (LLaMA 3).
+
+### The Smart Contract (`OmniPredictMarket.sol`)
+The core contract handles everything from market creation to Pari-Mutuel odds calculation and payout distribution. 
+- **FTSO Integration:** Crypto markets are resolved trustlessly by fetching the exact final price from the FTSO Registry at the expiration timestamp.
+- **FDC Ready:** Weather and Political markets are structured to accept trustless Web2 API data proofs via the Flare Data Connector.
+
+---
 
 ## 💻 Running Locally
 
-### 1. Install Dependencies
+Ready to deploy your own instance of OmniPredict?
+
+### 1. Clone & Install
 ```bash
+git clone https://github.com/your-username/OmniPredict.git
+cd OmniPredict
 npm install
 ```
 
-### 2. Environment Variables
-Create a `.env` file with the following:
+### 2. Environment Setup
+Create a `.env` file in the root directory:
 ```env
+# Frontend Config
 VITE_PRIVY_APP_ID=your_privy_app_id
-VITE_MARKET_CONTRACT_ADDRESS=your_deployed_coston2_address
+VITE_MARKET_CONTRACT_ADDRESS=0x07E99fC3c01E57741bbd9BEA1a34faD9EFc458b8
+
+# Backend AI Config (Groq API)
 GROQ_API_KEY=your_groq_api_key
+
+# Smart Contract Deployment (Optional)
+PRIVATE_KEY=your_deployer_private_key
 ```
 
-### 3. Run the App
+### 3. Start the Development Server
 ```bash
 npm run dev
 ```
 
-## 📜 Smart Contract Deployment
-The `OmniPredictMarket.sol` contract is deployed on Flare Coston2. It features an automated `resolveMarket` function that pulls the exact final price from the FTSO Registry at the expiration timestamp to determine the winners!
+### 4. (Optional) Deploying the Smart Contract
+If you want to deploy a fresh instance of the market contract to Coston2:
+```bash
+npx hardhat ignition deploy ignition/modules/OmniPredict.ts --network coston2 --reset
+npx hardhat run scripts/seed.ts --network coston2
+```
 
-*Built for the Flare Network Hackathon 2026*
+---
+
+## 🏆 Hackathon Submission Details
+**Track:** Flare Network 
+**Bounties Targeted:** Best DeFi / Prediction Market, Best integration of FTSO/FDC.
+
+*Built with ❤️ for the Flare Network Hackathon 2026*

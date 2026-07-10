@@ -38,8 +38,8 @@
       ]
     },
     "/Users/southen_/.gemini/antigravity/scratch/omnipredict/contracts/OmniPredictMarket.sol": {
-      "lastModificationDate": 1783497936461,
-      "contentHash": "24f2a0378dfc5be8813ae00240f2247d",
+      "lastModificationDate": 1783669829838,
+      "contentHash": "6dd68334506af05693094fca3c5bc1cb",
       "sourceName": "contracts/OmniPredictMarket.sol",
       "solcConfig": {
         "version": "0.8.20",
