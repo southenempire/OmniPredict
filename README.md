@@ -95,7 +95,15 @@ PRIVATE_KEY=your_deployer_private_key
 npm run dev
 ```
 
-### 4. (Optional) Deploying the Smart Contract
+### 4. 🧪 Testing the App (For Judges)
+Because OmniPredict runs on the live Coston2 Testnet, **you will need testnet tokens (C2FLR) to place bets.** 
+When you first log in with Google, Privy spins up a fresh wallet with 0 C2FLR.
+1. Log in to the app and click on **Profile** in the sidebar.
+2. Copy your **Wallet Address**.
+3. Visit the [Flare Coston2 Faucet](https://faucet.flare.network/coston2) and request testnet tokens.
+4. Once funded, you can seamlessly place bets and create markets!
+
+### 5. (Optional) Deploying the Smart Contract
 If you want to deploy a fresh instance of the market contract to Coston2:
 ```bash
 npx hardhat ignition deploy ignition/modules/OmniPredict.ts --network coston2 --reset
