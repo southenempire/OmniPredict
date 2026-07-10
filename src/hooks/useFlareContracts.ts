@@ -12,7 +12,7 @@ const publicClient = createPublicClient({
 
 const MARKET_ADDRESS = import.meta.env.VITE_MARKET_CONTRACT_ADDRESS as `0x${string}`;
 
-export type MarketType = 'crypto' | 'weather';
+export type MarketType = 'crypto' | 'weather' | 'politics';
 
 export interface Market {
   id: string;
@@ -106,6 +106,28 @@ export function useFlareContracts() {
             isAbove
           });
         }
+
+        // --- Mock Politics Markets ---
+        fetchedMarkets.push({
+          id: 'mock-pol-1',
+          title: 'Will the US Senate pass the Crypto Innovation Act before 2026?',
+          type: 'politics',
+          liquidityFAsset: 45200,
+          endTime: '2025-12-31T00:00:00Z',
+          yesOdds: 0.35,
+          noOdds: 0.65,
+          resolutionSource: 'FDC (News/Gov Oracle)',
+        });
+        fetchedMarkets.push({
+          id: 'mock-pol-2',
+          title: 'Will the UK hold a snap General Election in 2025?',
+          type: 'politics',
+          liquidityFAsset: 12400,
+          endTime: '2025-12-31T00:00:00Z',
+          yesOdds: 0.12,
+          noOdds: 0.88,
+          resolutionSource: 'FDC (News/Gov Oracle)',
+        });
 
         setMarkets(fetchedMarkets);
       } catch (err) {

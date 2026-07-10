@@ -110,52 +110,63 @@ function Ticker() {
   );
 }
 
-/* ── Animated mock trading card ────────────────────────── */
-function MockCard() {
-  const [pct, setPct] = useState(65);
-  useEffect(() => {
-    const id = setInterval(() => setPct(p => {
-      const d = (Math.random() - 0.5) * 4;
-      return Math.min(90, Math.max(10, p + d));
-    }), 2000);
-    return () => clearInterval(id);
-  }, []);
-
+/* ── Mock Phone Frame ────────────────────────── */
+function MockPhone() {
   return (
-    <div className="mock-card-wrapper">
-      <div className="mock-float-badge badge-won">🏆 +340 F-XRP won!</div>
-      <div className="mock-float-badge badge-live">⚡ 127 bets placed</div>
+    <div className="phone-mockup" style={{
+      width: '320px',
+      height: '620px',
+      border: '12px solid #1e293b',
+      borderRadius: '40px',
+      overflow: 'hidden',
+      position: 'relative',
+      background: 'var(--bg)',
+      boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.1)',
+      margin: '0 auto',
+      transform: 'rotate(-2deg)',
+      transition: 'transform 0.4s ease'
+    }}
+    onMouseOver={e => e.currentTarget.style.transform = 'rotate(0deg) scale(1.02)'}
+    onMouseOut={e => e.currentTarget.style.transform = 'rotate(-2deg) scale(1)'}
+    >
+      {/* Notch */}
+      <div style={{
+        position: 'absolute',
+        top: 0, left: '50%', transform: 'translateX(-50%)',
+        width: '120px', height: '24px',
+        background: '#1e293b',
+        borderBottomLeftRadius: '16px',
+        borderBottomRightRadius: '16px',
+        zIndex: 10
+      }} />
 
-      <div className="mock-card">
-        <div className="mock-card__live">
-          <span className="mock-card__live-dot" />
-          Live Market
+      {/* Mini App UI */}
+      <div style={{ padding: '2.5rem 1rem 1rem', height: '100%', overflowY: 'auto' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+           <img src="/logo.jpg" alt="Logo" style={{ width: 24, height: 24, borderRadius: 4 }} />
+           <div style={{ background: 'var(--flare)', padding: '0.3rem 0.6rem', borderRadius: '4px', fontSize: '0.7rem', color: '#fff', fontWeight: 'bold' }}>Connect</div>
         </div>
-
-        <div className="mock-card__title">
-          Will BTC exceed $100,000<br />before August 15, 2025?
-        </div>
-
-        <div className="mock-bar-label">
-          <span style={{ color: '#00ff87' }}>YES — {pct.toFixed(0)}%</span>
-          <span style={{ color: '#f72585' }}>NO — {(100 - pct).toFixed(0)}%</span>
-        </div>
-        <div className="mock-bar-wrap">
-          <div className="mock-bar-fill" style={{ width: `${pct}%`, transition: 'width 1.5s ease' }} />
-        </div>
-
-        <div className="mock-btns">
-          <button className="mock-btn mock-btn--yes">
-            Bet YES <span>{pct.toFixed(0)}¢</span>
-          </button>
-          <button className="mock-btn mock-btn--no">
-            Bet NO <span>{(100 - pct).toFixed(0)}¢</span>
-          </button>
-        </div>
-
-        <div className="mock-card__footer">
-          <span>Pool: <strong>48,200 F-XRP</strong></span>
-          <span>Resolves: <strong>via FTSO</strong></span>
+        
+        {/* Mock market cards inside the phone */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          {[
+            { t: 'Will BTC exceed $100K before Aug 15?', y: 65, c: 'Crypto' },
+            { t: 'Will Candidate X win in 2026?', y: 35, c: 'Politics' },
+            { t: 'NYC Temp > 95°F in August?', y: 71, c: 'Weather' }
+          ].map((m, i) => (
+             <div key={i} style={{ background: 'var(--surface)', padding: '1rem', borderRadius: '0.75rem', border: '1px solid var(--border)' }}>
+                <div style={{ fontSize: '0.65rem', color: 'var(--cyan)', marginBottom: '0.5rem', fontWeight: 600, textTransform: 'uppercase' }}>{m.c}</div>
+                <h4 style={{ fontSize: '0.9rem', marginBottom: '1rem', lineHeight: 1.3 }}>{m.t}</h4>
+                <div style={{ display: 'flex', height: '4px', background: 'var(--border)', borderRadius: '2px', overflow: 'hidden', marginBottom: '0.75rem' }}>
+                   <div style={{ width: `${m.y}%`, background: 'var(--green)' }} />
+                   <div style={{ width: `${100-m.y}%`, background: 'var(--pink)' }} />
+                </div>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <div style={{ flex: 1, border: '1px solid var(--green)', color: 'var(--green)', fontSize: '0.7rem', padding: '0.4rem', textAlign: 'center', borderRadius: '4px', fontWeight: 'bold' }}>Buy Yes</div>
+                  <div style={{ flex: 1, border: '1px solid var(--pink)', color: 'var(--pink)', fontSize: '0.7rem', padding: '0.4rem', textAlign: 'center', borderRadius: '4px', fontWeight: 'bold' }}>Buy No</div>
+                </div>
+             </div>
+          ))}
         </div>
       </div>
     </div>
@@ -246,7 +257,7 @@ export const LandingPage = () => {
             </div>
 
             <div className="lp-hero__right">
-              <MockCard />
+              <MockPhone />
             </div>
 
             <div className="weather-widget">
@@ -292,8 +303,9 @@ export const LandingPage = () => {
                         <span style={{ color: '#00ff87' }}>YES {m.yes}%</span>
                         <span style={{ color: '#f72585' }}>NO {100 - m.yes}%</span>
                       </div>
-                      <div style={{ height: '5px', background: 'rgba(255,255,255,.08)', borderRadius: '9999px', overflow: 'hidden' }}>
-                        <div className="preview-bar-fill" style={{ width: `${m.yes}%` }} />
+                      <div style={{ height: '6px', background: 'var(--border)', borderRadius: '9999px', overflow: 'hidden', display: 'flex' }}>
+                        <div style={{ width: `${m.yes}%`, background: 'var(--green)' }} />
+                        <div style={{ width: `${100 - m.yes}%`, background: 'var(--pink)' }} />
                       </div>
                     </div>
                     <div className="bet-buttons">

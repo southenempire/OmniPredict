@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGlobe, faChartLine, faSun, faArrowLeft, faWallet, faUser, faTerminal, faCircle, faCommentDots } from '@fortawesome/free-solid-svg-icons';
+import { faGlobe, faChartLine, faSun, faArrowLeft, faWallet, faUser, faTerminal, faCircle, faCommentDots, faLandmark } from '@fortawesome/free-solid-svg-icons';
 import { useFlareContracts, type MarketType } from '../hooks/useFlareContracts';
 import { MarketCard } from '../components/MarketCard';
 import { TerminalAccessCard } from '../components/TerminalAccessCard';
@@ -12,6 +12,7 @@ const FILTERS: { key: MarketType | 'all' | 'trades' | 'profile' | 'terminal'; la
   { key: 'all',      label: 'All Markets',    icon: faGlobe },
   { key: 'crypto',   label: 'Crypto (FTSO)',  icon: faChartLine },
   { key: 'weather',  label: 'Weather (FDC)',  icon: faSun },
+  { key: 'politics', label: 'Politics',       icon: faLandmark },
   { key: 'trades',   label: 'My Trades',      icon: faWallet },
   { key: 'profile',  label: 'Profile',        icon: faUser },
   { key: 'terminal', label: 'OmniAI Scanner', icon: faTerminal },
@@ -101,7 +102,7 @@ export const Dashboard = () => {
           padding: '1.25rem',
         }}>
           <div style={{ fontSize: '.75rem', fontWeight: 700, color: 'var(--flare)', marginBottom: '.4rem', textTransform: 'uppercase', letterSpacing: '.06em' }}>
-            ⚡ Flare Network
+            Flare Network
           </div>
           <div style={{ fontSize: '.8rem', color: 'var(--muted)', lineHeight: 1.55, marginBottom: '.85rem' }}>
             All markets resolve trustlessly via FTSO &amp; FDC on-chain.
@@ -144,7 +145,7 @@ export const Dashboard = () => {
             </h1>
           </div>
           <button className="wallet-btn" onClick={authenticated ? logout : login} disabled={!ready}>
-            {authenticated ? `🟢 ${user?.wallet?.address?.slice(0, 6)}...` : 'Login / Connect'}
+            {authenticated ? `${user?.wallet?.address?.slice(0, 6)}...` : 'Login / Connect'}
           </button>
         </header>
 
