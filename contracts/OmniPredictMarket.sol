@@ -12,6 +12,8 @@ interface IFtsoRegistry {
 contract OmniPredictMarket is Ownable, ReentrancyGuard {
     IFtsoRegistry public ftsoRegistry;
 
+    uint256 public constant CREATION_FEE = 10 ether; // 10 FLR
+
     enum Outcome { Unresolved, Yes, No }
 
     struct Market {
@@ -52,8 +54,13 @@ contract OmniPredictMarket is Ownable, ReentrancyGuard {
         uint256 _targetPrice,
         bool _isAbove,
         uint256 _resolutionTimestamp
-    ) external onlyOwner {
+    ) external payable {
+        require(msg.value >= CREATION_FEE, "Must pay 10 FLR creation fee");
         require(_resolutionTimestamp > block.timestamp, "Resolution must be in the future");
+
+        // Transfer fee to owner
+        (bool feeSuccess, ) = payable(owner()).call{value: msg.value}("");
+        require(feeSuccess, "Fee transfer failed");
 
         uint256 marketId = marketCount++;
         markets[marketId] = Market({

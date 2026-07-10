@@ -44,6 +44,9 @@ export interface UserProfile {
 }
 
 export function useFlareContracts() {
+  const { wallets } = useWallets();
+  const address = wallets[0]?.address;
+
   const [markets, setMarkets] = useState<Market[]>([]);
   const [trades, setTrades] = useState<Trade[]>([]);
   const [userProfile, setUserProfile] = useState<UserProfile>({
@@ -130,10 +133,52 @@ export function useFlareContracts() {
         });
 
         setMarkets(fetchedMarkets);
+
+        // Fetch User Trades
+        if (address) {
+          const fetchedTrades: Trade[] = [];
+          for (let i = 0; i < Number(count); i++) {
+             try {
+                const yesBet = await publicClient.readContract({
+                  address: MARKET_ADDRESS,
+                  abi: OmniPredictMarketABI.abi,
+                  functionName: 'yesBets',
+                  args: [BigInt(i), address as `0x${string}`]
+                }) as bigint;
+                const noBet = await publicClient.readContract({
+                  address: MARKET_ADDRESS,
+                  abi: OmniPredictMarketABI.abi,
+                  functionName: 'noBets',
+                  args: [BigInt(i), address as `0x${string}`]
+                }) as bigint;
+
+                if (yesBet > 0n) {
+                  fetchedTrades.push({
+                    id: `trade-${i}-yes`,
+                    marketId: i.toString(),
+                    prediction: 'yes',
+                    amount: Number(formatEther(yesBet)),
+                    timestamp: new Date().toISOString() // We don't store timestamp in mapping, so mock it for now
+                  });
+                }
+                if (noBet > 0n) {
+                  fetchedTrades.push({
+                    id: `trade-${i}-no`,
+                    marketId: i.toString(),
+                    prediction: 'no',
+                    amount: Number(formatEther(noBet)),
+                    timestamp: new Date().toISOString()
+                  });
+                }
+             } catch(e) {}
+          }
+          setTrades(fetchedTrades);
+        }
+
       } catch (err) {
       console.error("Error fetching markets from smart contract:", err);
     }
-  }, []);
+  }, [address]);
 
   // Fetch real data from the Smart Contract
   useEffect(() => {
@@ -144,7 +189,36 @@ export function useFlareContracts() {
     return () => clearInterval(interval);
   }, [fetchMarkets]);
 
-  const { wallets } = useWallets();
+  const createMarket = async (title: string, symbol: string, targetPrice: number, isAbove: boolean, endDateStr: string) => {
+    const wallet = wallets[0];
+    if (!wallet) {
+      alert("Please connect your wallet first!");
+      return;
+    }
+    try {
+      await wallet.switchChain(flareTestnet.id);
+      const provider = await wallet.getEthereumProvider();
+      const walletClient = createWalletClient({
+        account: wallet.address as `0x${string}`,
+        chain: flareTestnet,
+        transport: custom(provider)
+      });
+      const resolutionTimestamp = BigInt(Math.floor(new Date(endDateStr).getTime() / 1000));
+      const hash = await walletClient.writeContract({
+        address: MARKET_ADDRESS,
+        abi: OmniPredictMarketABI.abi,
+        functionName: 'createMarket',
+        args: [title, symbol, BigInt(targetPrice), isAbove, resolutionTimestamp],
+        value: parseEther('10') // 10 FLR creation fee
+      });
+      await publicClient.waitForTransactionReceipt({ hash });
+      alert(`Market Created successfully! Hash: ${hash.slice(0,10)}...`);
+      fetchMarkets();
+    } catch (err: any) {
+      console.error("Create market failed:", err);
+      alert(`Transaction failed: ${err.message || 'Unknown error'}`);
+    }
+  };
 
   const placeBet = async (marketId: string, prediction: 'yes' | 'no', amount: number) => {
     const wallet = wallets[0];
@@ -253,6 +327,7 @@ export function useFlareContracts() {
     hasTerminalAccess,
     placeBet,
     cashOut,
+    createMarket,
     updateProfile,
     purchaseTerminalAccess
   };
