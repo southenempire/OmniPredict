@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faChartLine, faSun, faCoins, faClock, faInfoCircle, faLandmark, faListUl } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faChartLine, faSun, faCoins, faClock, faInfoCircle, faLandmark, faListUl, faTerminal } from '@fortawesome/free-solid-svg-icons';
 import { useFlareContracts } from '../hooks/useFlareContracts';
 import { usePrivy } from '@privy-io/react-auth';
+import { AITerminal } from '../components/AITerminal';
 
 export const MarketPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -11,6 +12,7 @@ export const MarketPage = () => {
   const { markets, placeBet } = useFlareContracts();
   const { ready, authenticated, login } = usePrivy();
   const [betAmount, setBetAmount] = useState<number>(100);
+  const [showAI, setShowAI] = useState<boolean>(false);
 
   const market = markets.find(m => m.id === id);
 
@@ -104,6 +106,24 @@ export const MarketPage = () => {
 
       {/* Right Panel: Trading Interface */}
       <div className="market-right-panel" style={{ width: '400px', flexShrink: 0 }}>
+        {/* OmniAI Toggle */}
+        <div style={{ marginBottom: '1.5rem' }}>
+          <button 
+            onClick={() => setShowAI(!showAI)}
+            style={{ width: '100%', padding: '0.8rem', background: 'rgba(0, 255, 135, 0.1)', color: 'var(--cyan)', border: '1px solid var(--cyan)', borderRadius: '6px', fontWeight: 600, cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', transition: 'all 0.2s' }}
+            onMouseOver={e => e.currentTarget.style.background = 'rgba(0, 255, 135, 0.2)'}
+            onMouseOut={e => e.currentTarget.style.background = 'rgba(0, 255, 135, 0.1)'}
+          >
+            <FontAwesomeIcon icon={faTerminal} /> {showAI ? 'Hide OmniAI' : 'Ask OmniAI'}
+          </button>
+          
+          {showAI && (
+            <div style={{ marginTop: '1rem' }}>
+              <AITerminal marketContext={market.title} />
+            </div>
+          )}
+        </div>
+
         <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '0.75rem', padding: '1.5rem', position: 'sticky', top: '100px' }}>
           <h2 style={{ marginBottom: '1.5rem', fontSize: '1.25rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
             Trade

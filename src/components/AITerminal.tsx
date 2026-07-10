@@ -9,12 +9,14 @@ interface Message {
   timestamp: Date;
 }
 
-export const AITerminal: React.FC = () => {
+export const AITerminal: React.FC<{ marketContext?: string }> = ({ marketContext }) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
       sender: 'ai',
-      text: 'OmniAI Terminal initialized. Connected to Flare State Connector and FTSO nodes. How can I assist your predictions today?',
+      text: marketContext 
+        ? `OmniAI Terminal initialized. Analyzing market: "${marketContext}". How can I assist your predictions today?`
+        : 'OmniAI Terminal initialized. Connected to Flare State Connector and FTSO nodes. How can I assist your predictions today?',
       timestamp: new Date()
     }
   ]);
