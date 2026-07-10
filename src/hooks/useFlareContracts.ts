@@ -110,6 +110,8 @@ export function useFlareContracts() {
           });
         }
 
+        fetchedMarkets.reverse();
+
         // --- Mock Politics Markets ---
         fetchedMarkets.push({
           id: 'mock-pol-1',
