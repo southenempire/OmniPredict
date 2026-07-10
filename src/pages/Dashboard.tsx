@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGlobe, faChartLine, faSun, faArrowLeft, faWallet, faUser, faTerminal, faCircle, faCommentDots, faLandmark, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { faGlobe, faChartLine, faSun, faArrowLeft, faWallet, faUser, faTerminal, faCircle, faCommentDots, faLandmark, faPlusCircle, faHistory } from '@fortawesome/free-solid-svg-icons';
 import { useFlareContracts, type MarketType } from '../hooks/useFlareContracts';
 import { MarketCard } from '../components/MarketCard';
 import { TerminalAccessCard } from '../components/TerminalAccessCard';
@@ -9,11 +9,12 @@ import { AITerminal } from '../components/AITerminal';
 import { MarketCreationForm } from '../components/MarketCreationForm';
 import { usePrivy } from '@privy-io/react-auth';
 
-const FILTERS: { key: MarketType | 'all' | 'trades' | 'create' | 'profile' | 'terminal'; label: string; icon: any }[] = [
+const FILTERS: { key: MarketType | 'all' | 'past' | 'trades' | 'create' | 'profile' | 'terminal'; label: string; icon: any }[] = [
   { key: 'all',      label: 'All Markets',    icon: faGlobe },
   { key: 'crypto',   label: 'Crypto (FTSO)',  icon: faChartLine },
   { key: 'weather',  label: 'Weather (FDC)',  icon: faSun },
   { key: 'politics', label: 'Politics',       icon: faLandmark },
+  { key: 'past',     label: 'Past Markets',   icon: faHistory },
   { key: 'trades',   label: 'My Trades',      icon: faWallet },
   { key: 'create',   label: 'Create Market',  icon: faPlusCircle },
   { key: 'profile',  label: 'Profile',        icon: faUser },
@@ -26,7 +27,7 @@ export const Dashboard = () => {
   const { markets, trades, userProfile, placeBet, cashOut, createMarket, updateProfile, hasTerminalAccess, purchaseTerminalAccess } = useFlareContracts();
   const { ready, authenticated, user, login, logout } = usePrivy();
   const isWalletConnected = authenticated;
-  const [activeFilter, setActiveFilter] = useState<MarketType | 'all' | 'trades' | 'create' | 'profile' | 'terminal'>('all');
+  const [activeFilter, setActiveFilter] = useState<MarketType | 'all' | 'past' | 'trades' | 'create' | 'profile' | 'terminal'>('all');
   const [cashingOutId, setCashingOutId] = useState<string | null>(null);
   const navigate = useNavigate();
 
@@ -36,7 +37,18 @@ export const Dashboard = () => {
     setCashingOutId(null);
   };
 
-  const filteredMarkets = markets.filter(m => activeFilter === 'all' || m.type === activeFilter);
+  const now = new Date();
+  const filteredMarkets = markets.filter(m => {
+    const isExpired = new Date(m.endTime) < now;
+    
+    if (activeFilter === 'past') {
+      return isExpired;
+    }
+    
+    if (isExpired) return false;
+    
+    return activeFilter === 'all' || m.type === activeFilter;
+  });
 
   return (
     <div className="app-container">
