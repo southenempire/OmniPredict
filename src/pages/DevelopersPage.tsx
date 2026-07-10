@@ -19,7 +19,7 @@ const markets = await client.getActiveMarkets();
     code: `const txHash = await client.placeBet(
   'market-id',
   'yes',       // or 'no'
-  100          // amount in F-XRP
+  100          // amount in FLR
 );
 console.log('Tx:', txHash);`,
   }

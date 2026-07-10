@@ -246,17 +246,17 @@ console.log(markets);`} />
 // { id, title, type, yesOdds, noOdds, liquidityFAsset, endTime, resolutionSource }`} />
 
           <h3 className="docs-subsection-title" style={{ marginTop: '2rem' }}>client.placeBet()</h3>
-          <p>Places a bet on an active market. Requires a connected wallet with F-XRP balance.</p>
+          <p>Places a bet on an active market. Requires a connected wallet with FLR balance.</p>
           <CodeBlock code={`const tx = await client.placeBet({
   marketId: 'm1',
   prediction: 'yes',   // 'yes' | 'no'
-  amount: 100,         // Amount in F-XRP
+  amount: 100,         // Amount in FLR
 });
 
 console.log(tx.hash); // On-chain transaction hash`} />
 
           <h3 className="docs-subsection-title" style={{ marginTop: '2rem' }}>client.createMarket()</h3>
-          <p>Lists a new prediction market. Requires a 10 F-XRP listing fee.</p>
+          <p>Lists a new prediction market. Requires a 10 FLR listing fee.</p>
           <CodeBlock code={`const market = await client.createMarket({
   title: 'Will BTC exceed $150K by Dec 2026?',
   type: 'crypto',                // 'crypto' | 'weather'
@@ -294,7 +294,7 @@ console.log(tx.hash); // On-chain transaction hash`} />
                 <tr><td>type</td><td><code>'crypto' | 'weather'</code></td><td>Market category</td></tr>
                 <tr><td>yesOdds</td><td><code>number</code></td><td>Probability of YES (0–1)</td></tr>
                 <tr><td>noOdds</td><td><code>number</code></td><td>Probability of NO (0–1)</td></tr>
-                <tr><td>liquidityFAsset</td><td><code>number</code></td><td>Total F-XRP in the pool</td></tr>
+                <tr><td>liquidityFAsset</td><td><code>number</code></td><td>Total FLR in the pool</td></tr>
                 <tr><td>endTime</td><td><code>string</code></td><td>ISO 8601 resolution timestamp</td></tr>
                 <tr><td>resolutionSource</td><td><code>'FTSO' | 'FDC'</code></td><td>Oracle used for settlement</td></tr>
               </tbody>

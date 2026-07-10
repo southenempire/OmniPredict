@@ -354,7 +354,7 @@ export const LandingPage = () => {
                 <div className="pricing-card__badge">Most Popular</div>
                 <div className="pricing-card__icon" style={{ background: 'rgba(0,212,255,0.1)', color: 'var(--cyan)' }}><FontAwesomeIcon icon={faRobot} /></div>
                 <h3 className="pricing-card__name">OmniAI Terminal</h3>
-                <div className="pricing-card__price">50 <span className="pricing-unit">F-XRP</span></div>
+                <div className="pricing-card__price">50 <span className="pricing-unit">FLR</span></div>
                 <p className="pricing-card__sub">per 24 hours</p>
                 <ul className="pricing-card__features">
                   <li><FontAwesomeIcon icon={faRobot} /><span><strong>AI market scanner</strong> access</span></li>
@@ -367,7 +367,7 @@ export const LandingPage = () => {
               <div className="pricing-card">
                 <div className="pricing-card__icon" style={{ background: 'rgba(123,47,255,0.1)', color: 'var(--purple)' }}><FontAwesomeIcon icon={faPlus} /></div>
                 <h3 className="pricing-card__name">Market Creator</h3>
-                <div className="pricing-card__price">10 <span className="pricing-unit">F-XRP</span></div>
+                <div className="pricing-card__price">10 <span className="pricing-unit">FLR</span></div>
                 <p className="pricing-card__sub">per market listed</p>
                 <ul className="pricing-card__features">
                   <li><FontAwesomeIcon icon={faPlus} /><span><strong>Create custom markets</strong></span></li>

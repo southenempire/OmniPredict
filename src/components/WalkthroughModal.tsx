@@ -19,7 +19,7 @@ const STEPS = [
     icon: faBolt,
     color: '#facc15',
     title: 'Place Your Prediction',
-    body: 'Stake F-XRP or F-BTC on YES or NO. Bet on 15-minute crypto scalps or 24-hour weather events. Your position is locked in a smart contract instantly.'
+    body: 'Stake FLR or F-BTC on YES or NO. Bet on 15-minute crypto scalps or 24-hour weather events. Your position is locked in a smart contract instantly.'
   },
   {
     icon: faLink,
