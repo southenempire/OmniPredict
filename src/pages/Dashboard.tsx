@@ -8,6 +8,7 @@ import { TerminalAccessCard } from '../components/TerminalAccessCard';
 import { AITerminal } from '../components/AITerminal';
 import { MarketCreationForm } from '../components/MarketCreationForm';
 import { usePrivy } from '@privy-io/react-auth';
+import { FTSOPriceTicker } from '../components/FTSOPriceTicker';
 
 const FILTERS: { key: MarketType | 'all' | 'past' | 'trades' | 'create' | 'profile' | 'terminal'; label: string; icon: any }[] = [
   { key: 'all',      label: 'All Markets',    icon: faGlobe },
@@ -140,6 +141,7 @@ export const Dashboard = () => {
 
       {/* ── Main Content ─────────────────────────────────── */}
       <main className="main-content">
+        <FTSOPriceTicker />
 
         <header className="header">
           <div>
