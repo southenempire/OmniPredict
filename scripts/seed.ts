@@ -12,111 +12,94 @@ async function main() {
   const signers = await ethers.getSigners();
   const owner = signers[0];
 
-  console.log("Seeding markets on contract:", marketAddress);
+  console.log("🌱 Seeding fresh markets on contract:", marketAddress);
 
-  // Market 1: BTC > 100k by tomorrow
-  const tx1 = await OmniPredictMarket.connect(owner).createMarket(
-    "Will Bitcoin (BTC) exceed $100,000 before tomorrow?",
-    "BTC",
-    100000,
-    true,
-    Math.floor(Date.now() / 1000) + 86400,
-    { value: ethers.parseEther("10") }
-  );
-  await tx1.wait();
+  const now = Math.floor(Date.now() / 1000);
+  const day = 86400;
 
-  // Market 2: ETH flip BTC (target price is arbitrary for this demo, say > 0.05 BTC/ETH ratio?)
-  // Let's just use USD price of ETH > 4000
-  const tx2 = await OmniPredictMarket.connect(owner).createMarket(
-    "Will Ethereum (ETH) cross $4,000 this week?",
-    "ETH",
-    4000,
-    true,
-    Math.floor(Date.now() / 1000) + 86400 * 7,
-    { value: ethers.parseEther("10") }
-  );
-  await tx2.wait();
+  const markets = [
+    // --- Crypto Markets (30-day expiry) ---
+    {
+      title: "Will Bitcoin (BTC) exceed $100,000 in the next 30 days?",
+      symbol: "BTC",
+      targetPrice: 100000,
+      isAbove: true,
+      expiry: now + day * 30,
+    },
+    {
+      title: "Will Ethereum (ETH) cross $4,000 in the next 30 days?",
+      symbol: "ETH",
+      targetPrice: 4000,
+      isAbove: true,
+      expiry: now + day * 30,
+    },
+    {
+      title: "Will FLR token reach $0.10 in the next 30 days?",
+      symbol: "FLR",
+      targetPrice: 1, // 1 = 0.10 scaled
+      isAbove: true,
+      expiry: now + day * 30,
+    },
+    {
+      title: "Will XRP stay above $2.00 for the next 7 days?",
+      symbol: "XRP",
+      targetPrice: 2,
+      isAbove: true,
+      expiry: now + day * 7,
+    },
+    // --- African Weather Markets (7-day expiry) ---
+    {
+      title: "Will Lagos, Nigeria exceed 32°C this week?",
+      symbol: "WTHR_LOS",
+      targetPrice: 32,
+      isAbove: true,
+      expiry: now + day * 7,
+    },
+    {
+      title: "Will Nairobi, Kenya exceed 28°C this week?",
+      symbol: "WTHR_NBO",
+      targetPrice: 28,
+      isAbove: true,
+      expiry: now + day * 7,
+    },
+    {
+      title: "Will Accra, Ghana experience over 5mm rainfall this week?",
+      symbol: "WTHR_ACC",
+      targetPrice: 5,
+      isAbove: true,
+      expiry: now + day * 7,
+    },
+    {
+      title: "Will Cape Town, SA drop below 12°C this week?",
+      symbol: "WTHR_CPT",
+      targetPrice: 12,
+      isAbove: false,
+      expiry: now + day * 7,
+    },
+  ];
 
-  // Market 3: XRP > 1.00 in 15 mins
-  const tx3 = await OmniPredictMarket.connect(owner).createMarket(
-    "Will XRP price stay above $1.00 for the next 15 minutes?",
-    "XRP",
-    1,
-    true,
-    Math.floor(Date.now() / 1000) + 900,
-    { value: ethers.parseEther("10") }
-  );
-  await tx3.wait();
+  let successCount = 0;
+  for (const m of markets) {
+    try {
+      console.log(`  Creating: "${m.title}"...`);
+      const tx = await OmniPredictMarket.connect(owner).createMarket(
+        m.title,
+        m.symbol,
+        m.targetPrice,
+        m.isAbove,
+        m.expiry,
+        { value: ethers.parseEther("10") }
+      );
+      await tx.wait();
+      successCount++;
+      console.log(`  ✅ Done! (${m.symbol}, expires in ${Math.round((m.expiry - now) / day)} days)`);
+    } catch (err: any) {
+      console.error(`  ❌ Failed: ${m.title} — ${err.message}`);
+    }
+  }
 
-  // Market 4: Weather Example
-  const tx4 = await OmniPredictMarket.connect(owner).createMarket(
-    "Will London exceed 25°C tomorrow?",
-    "WTHR_LON",
-    25,
-    true,
-    Math.floor(Date.now() / 1000) + 86400,
-    { value: ethers.parseEther("10") }
-  );
-  await tx4.wait();
-
-  console.log("Successfully seeded 4 initial markets!");
-
-  // African Weather Markets
-  const tx5 = await OmniPredictMarket.connect(owner).createMarket(
-    "Will Nairobi, Kenya exceed 28°C tomorrow?",
-    "WTHR_NBO",
-    28,
-    true,
-    Math.floor(Date.now() / 1000) + 86400,
-    { value: ethers.parseEther("10") }
-  );
-  await tx5.wait();
-
-  const tx6 = await OmniPredictMarket.connect(owner).createMarket(
-    "Will Accra, Ghana experience more than 10mm of rainfall this week?",
-    "WTHR_ACC",
-    10,
-    true,
-    Math.floor(Date.now() / 1000) + 86400 * 7,
-    { value: ethers.parseEther("10") }
-  );
-  await tx6.wait();
-
-  const tx7 = await OmniPredictMarket.connect(owner).createMarket(
-    "Will Cape Town, SA drop below 12°C tonight?",
-    "WTHR_CPT",
-    12,
-    false,
-    Math.floor(Date.now() / 1000) + 43200,
-    { value: ethers.parseEther("10") }
-  );
-  await tx7.wait();
-
-  const tx8 = await OmniPredictMarket.connect(owner).createMarket(
-    "Will Lagos, Nigeria exceed 32°C tomorrow?",
-    "WTHR_LOS",
-    32,
-    true,
-    Math.floor(Date.now() / 1000) + 86400,
-    { value: ethers.parseEther("10") }
-  );
-  await tx8.wait();
-
-  console.log("Successfully seeded African Weather markets!");
-
-  // Let's place some dummy bets so the pools aren't 0
-  // NOTE: Commented out for Coston2 deployment to avoid gas limits and missing signers
-  /*
-  await OmniPredictMarket.connect(owner).placeBet(0, true, { value: ethers.parseEther("10") });
-  await OmniPredictMarket.connect(signers[1]).placeBet(0, false, { value: ethers.parseEther("5") });
-
-  await OmniPredictMarket.connect(owner).placeBet(1, true, { value: ethers.parseEther("1") });
-  await OmniPredictMarket.connect(signers[2]).placeBet(1, false, { value: ethers.parseEther("2") });
-
-  await OmniPredictMarket.connect(owner).placeBet(3, false, { value: ethers.parseEther("1") });
-  await OmniPredictMarket.connect(signers[3]).placeBet(3, true, { value: ethers.parseEther("2") });
-  */
-  console.log("Seeded initial liquidity pools!");
+  console.log(`\n🎉 Successfully seeded ${successCount}/${markets.length} markets!`);
+  console.log("Markets will stay active for 7–30 days.");
 }
 
 main().catch((error) => {
