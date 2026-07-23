@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGlobe, faChartLine, faSun, faArrowLeft, faWallet, faUser, faTerminal, faCircle, faCommentDots, faLandmark, faPlusCircle, faHistory } from '@fortawesome/free-solid-svg-icons';
+import { faGlobe, faChartLine, faSun, faArrowLeft, faWallet, faUser, faTerminal, faCircle, faCommentDots, faLandmark, faPlusCircle, faHistory, faTrophy } from '@fortawesome/free-solid-svg-icons';
 import { useFlareContracts, type MarketType } from '../hooks/useFlareContracts';
 import { MarketCard } from '../components/MarketCard';
 import { TerminalAccessCard } from '../components/TerminalAccessCard';
@@ -9,13 +9,15 @@ import { AITerminal } from '../components/AITerminal';
 import { MarketCreationForm } from '../components/MarketCreationForm';
 import { usePrivy } from '@privy-io/react-auth';
 import { FTSOPriceTicker } from '../components/FTSOPriceTicker';
+import { Leaderboard } from './Leaderboard';
 
-const FILTERS: { key: MarketType | 'all' | 'past' | 'trades' | 'create' | 'profile' | 'terminal'; label: string; icon: any }[] = [
+const FILTERS: { key: MarketType | 'all' | 'past' | 'trades' | 'create' | 'profile' | 'terminal' | 'leaderboard'; label: string; icon: any }[] = [
   { key: 'all',      label: 'All Markets',    icon: faGlobe },
   { key: 'crypto',   label: 'Crypto (FTSO)',  icon: faChartLine },
   { key: 'weather',  label: 'Weather (FDC)',  icon: faSun },
   { key: 'politics', label: 'Politics',       icon: faLandmark },
   { key: 'past',     label: 'Past Markets',   icon: faHistory },
+  { key: 'leaderboard', label: 'Leaderboard', icon: faTrophy },
   { key: 'trades',   label: 'My Trades',      icon: faWallet },
   { key: 'create',   label: 'Create Market',  icon: faPlusCircle },
   { key: 'profile',  label: 'Profile',        icon: faUser },
@@ -28,7 +30,7 @@ export const Dashboard = () => {
   const { markets, trades, userProfile, placeBet, cashOut, createMarket, updateProfile, hasTerminalAccess, purchaseTerminalAccess } = useFlareContracts();
   const { ready, authenticated, user, login, logout } = usePrivy();
   const isWalletConnected = authenticated;
-  const [activeFilter, setActiveFilter] = useState<MarketType | 'all' | 'past' | 'trades' | 'create' | 'profile' | 'terminal'>('all');
+  const [activeFilter, setActiveFilter] = useState<MarketType | 'all' | 'past' | 'trades' | 'create' | 'profile' | 'terminal' | 'leaderboard'>('all');
   const [cashingOutId, setCashingOutId] = useState<string | null>(null);
   const navigate = useNavigate();
 
@@ -147,17 +149,17 @@ export const Dashboard = () => {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '.75rem', marginBottom: '.3rem' }}>
               <span style={{ fontSize: '.75rem', fontWeight: 700, color: 'var(--cyan)', textTransform: 'uppercase', letterSpacing: '.1em', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                <FontAwesomeIcon icon={activeFilter === 'trades' ? faWallet : activeFilter === 'create' ? faPlusCircle : activeFilter === 'profile' ? faUser : activeFilter === 'terminal' ? faTerminal : faCircle} style={{ fontSize: '0.6rem' }} />
-                {activeFilter === 'trades' ? 'Portfolio' : activeFilter === 'create' ? 'Creator' : activeFilter === 'profile' ? 'Settings' : activeFilter === 'terminal' ? 'AI Access' : 'Live'}
+                <FontAwesomeIcon icon={activeFilter === 'trades' ? faWallet : activeFilter === 'create' ? faPlusCircle : activeFilter === 'profile' ? faUser : activeFilter === 'terminal' ? faTerminal : activeFilter === 'leaderboard' ? faTrophy : faCircle} style={{ fontSize: '0.6rem' }} />
+                {activeFilter === 'trades' ? 'Portfolio' : activeFilter === 'create' ? 'Creator' : activeFilter === 'profile' ? 'Settings' : activeFilter === 'terminal' ? 'AI Access' : activeFilter === 'leaderboard' ? 'Rankings' : 'Live'}
               </span>
-              {activeFilter !== 'trades' && activeFilter !== 'create' && activeFilter !== 'profile' && activeFilter !== 'terminal' && (
+              {activeFilter !== 'trades' && activeFilter !== 'create' && activeFilter !== 'profile' && activeFilter !== 'terminal' && activeFilter !== 'leaderboard' && (
                 <span style={{ fontSize: '.75rem', color: 'var(--muted)' }}>
                   {filteredMarkets.length} market{filteredMarkets.length !== 1 ? 's' : ''}
                 </span>
               )}
             </div>
             <h1>
-              {activeFilter === 'trades' ? 'My Trades' : activeFilter === 'create' ? 'Launch Market' : activeFilter === 'profile' ? 'Profile Settings' : activeFilter === 'terminal' ? 'OmniAI Terminal' : 'Explore Markets'}
+              {activeFilter === 'trades' ? 'My Trades' : activeFilter === 'create' ? 'Launch Market' : activeFilter === 'profile' ? 'Profile Settings' : activeFilter === 'terminal' ? 'OmniAI Terminal' : activeFilter === 'leaderboard' ? 'Leaderboard' : 'Explore Markets'}
             </h1>
           </div>
           <button className="wallet-btn" onClick={authenticated ? logout : login} disabled={!ready}>
@@ -201,6 +203,8 @@ export const Dashboard = () => {
               </div>
             )}
           </div>
+        ) : activeFilter === 'leaderboard' ? (
+          <Leaderboard />
         ) : activeFilter === 'create' ? (
           <MarketCreationForm createMarket={createMarket} />
         ) : activeFilter === 'profile' ? (
