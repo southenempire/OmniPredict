@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChartLine, faSun, faCoins, faHourglassHalf, faCommentDots, faLandmark } from '@fortawesome/free-solid-svg-icons';
+import { faChartLine, faSun, faCoins, faHourglassHalf, faCommentDots, faLandmark, faLock } from '@fortawesome/free-solid-svg-icons';
 import { type Market } from '../hooks/useFlareContracts';
+import toast from 'react-hot-toast';
 
 interface MarketCardProps {
   market: Market;
@@ -14,9 +15,14 @@ export const MarketCard: React.FC<MarketCardProps> = ({ market, onBet, onClick }
 
   const handleBetClick = (e: React.MouseEvent, prediction: 'yes' | 'no') => {
     e.stopPropagation();
-    if (betAmount <= 0) return alert("Amount must be greater than 0");
+    if (betAmount <= 0) {
+      toast.error("Amount must be greater than 0");
+      return;
+    }
     onBet(market.id, prediction, betAmount);
   };
+
+  const isExpired = new Date(market.endTime) < new Date();
 
   const yesPct = (market.yesOdds * 100).toFixed(0);
   const noPct  = (market.noOdds  * 100).toFixed(0);
@@ -83,41 +89,50 @@ export const MarketCard: React.FC<MarketCardProps> = ({ market, onBet, onClick }
         </div>
       </div>
 
-      {/* Amount Input */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(0,0,0,0.2)', padding: '0.4rem 0.6rem', borderRadius: '0.4rem', border: '1px solid var(--border)' }} onClick={e => e.stopPropagation()}>
-        <span style={{ color: 'var(--muted)', fontSize: '0.75rem', fontWeight: 600 }}>Amt:</span>
-        <input 
-          type="number" 
-          value={betAmount} 
-          onChange={(e) => setBetAmount(Number(e.target.value))}
-          style={{ background: 'transparent', border: 'none', color: 'white', flex: 1, outline: 'none', fontSize: '0.85rem', textAlign: 'right', paddingRight: '0.4rem' }}
-          min="1"
-          autoComplete="off"
-          autoCorrect="off"
-          className="hide-arrows"
-        />
-        <span style={{ color: 'var(--muted)', fontSize: '0.75rem', fontWeight: 600 }}>FLR</span>
-      </div>
+      {/* Amount Input & Buttons or Closed Badge */}
+      {isExpired ? (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', background: 'rgba(255,255,255,0.05)', padding: '0.8rem', borderRadius: '0.4rem', border: '1px solid var(--border)', color: 'var(--muted)', fontWeight: 600, fontSize: '0.9rem' }}>
+          <FontAwesomeIcon icon={faLock} /> Market Closed
+        </div>
+      ) : (
+        <>
+          {/* Amount Input */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(0,0,0,0.2)', padding: '0.4rem 0.6rem', borderRadius: '0.4rem', border: '1px solid var(--border)' }} onClick={e => e.stopPropagation()}>
+            <span style={{ color: 'var(--muted)', fontSize: '0.75rem', fontWeight: 600 }}>Amt:</span>
+            <input 
+              type="number" 
+              value={betAmount} 
+              onChange={(e) => setBetAmount(Number(e.target.value))}
+              style={{ background: 'transparent', border: 'none', color: 'white', flex: 1, outline: 'none', fontSize: '0.85rem', textAlign: 'right', paddingRight: '0.4rem' }}
+              min="1"
+              autoComplete="off"
+              autoCorrect="off"
+              className="hide-arrows"
+            />
+            <span style={{ color: 'var(--muted)', fontSize: '0.75rem', fontWeight: 600 }}>FLR</span>
+          </div>
 
-      {/* Bet buttons (Side-by-side) */}
-      <div style={{ display: 'flex', gap: '0.5rem' }}>
-        <button 
-          onClick={(e) => handleBetClick(e, 'yes')}
-          style={{ flex: 1, padding: '0.6rem', borderRadius: '0.4rem', border: '1px solid var(--green)', background: 'transparent', color: 'var(--green)', fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer', transition: 'all 0.2s' }}
-          onMouseOver={e => e.currentTarget.style.background = 'rgba(16, 185, 129, 0.1)'}
-          onMouseOut={e => e.currentTarget.style.background = 'transparent'}
-        >
-          Buy Yes
-        </button>
-        <button 
-          onClick={(e) => handleBetClick(e, 'no')}
-          style={{ flex: 1, padding: '0.6rem', borderRadius: '0.4rem', border: '1px solid var(--pink)', background: 'transparent', color: 'var(--pink)', fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer', transition: 'all 0.2s' }}
-          onMouseOver={e => e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)'}
-          onMouseOut={e => e.currentTarget.style.background = 'transparent'}
-        >
-          Buy No
-        </button>
-      </div>
+          {/* Bet buttons (Side-by-side) */}
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <button 
+              onClick={(e) => handleBetClick(e, 'yes')}
+              style={{ flex: 1, padding: '0.6rem', borderRadius: '0.4rem', border: '1px solid var(--green)', background: 'transparent', color: 'var(--green)', fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer', transition: 'all 0.2s' }}
+              onMouseOver={e => e.currentTarget.style.background = 'rgba(16, 185, 129, 0.1)'}
+              onMouseOut={e => e.currentTarget.style.background = 'transparent'}
+            >
+              Buy Yes
+            </button>
+            <button 
+              onClick={(e) => handleBetClick(e, 'no')}
+              style={{ flex: 1, padding: '0.6rem', borderRadius: '0.4rem', border: '1px solid var(--pink)', background: 'transparent', color: 'var(--pink)', fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer', transition: 'all 0.2s' }}
+              onMouseOver={e => e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)'}
+              onMouseOut={e => e.currentTarget.style.background = 'transparent'}
+            >
+              Buy No
+            </button>
+          </div>
+        </>
+      )}
 
       {/* Footer: Resolution & Feedback */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem', paddingTop: '1rem', borderTop: '1px solid var(--border)' }}>

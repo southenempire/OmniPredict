@@ -5,11 +5,13 @@ import { MarketPage } from './pages/MarketPage';
 import { DevelopersPage } from './pages/DevelopersPage';
 import { DocsPage } from './pages/DocsPage';
 import { AppNav } from './components/AppNav';
+import { Toaster } from 'react-hot-toast';
 import './index.css';
 
 function App() {
   return (
     <Router>
+      <Toaster position="bottom-right" toastOptions={{ style: { background: '#1a1a2e', color: '#fff', border: '1px solid rgba(255,255,255,0.1)' } }} />
       <AppNav />
       <Routes>
         <Route path="/"            element={<LandingPage />} />

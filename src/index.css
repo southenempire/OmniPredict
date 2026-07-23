@@ -1181,9 +1181,19 @@ body {
   .bento-card--tall  { grid-row: span 1; }
   .preview-grid { grid-template-columns: repeat(2, 1fr); }
   .app-container { flex-direction: column; }
-  .sidebar { width: 100%; flex-direction: row; align-items: center; padding: 1rem 1.5rem; gap: 1rem; }
+  .sidebar { width: 100%; flex-direction: column; align-items: flex-start; padding: 1rem 1.5rem; gap: 1rem; }
   .sidebar-logo { font-size: 1rem; }
-  .sidebar-nav { flex-direction: row; gap: .5rem; }
+  .sidebar-nav { 
+    display: flex;
+    flex-direction: row; 
+    gap: .5rem; 
+    overflow-x: auto; 
+    width: 100%; 
+    padding-bottom: 0.5rem;
+    -webkit-overflow-scrolling: touch;
+  }
+  .sidebar-nav::-webkit-scrollbar { display: none; }
+  .nav-item { white-space: nowrap; flex-shrink: 0; }
   .market-page-container { flex-direction: column; }
   .market-right-panel { width: 100%; position: static; }
 }
@@ -1749,14 +1759,26 @@ input:focus, textarea:focus {
   .sidebar {
     width: 100%;
     height: auto;
-    flex-direction: row;
-    flex-wrap: wrap;
+    flex-direction: column;
     padding: 1rem;
+    align-items: flex-start;
   }
   .sidebar-nav {
+    display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 0.5rem;
+    overflow-x: auto;
+    width: 100%;
+    padding-bottom: 0.5rem;
+    -webkit-overflow-scrolling: touch;
+  }
+  .sidebar-nav::-webkit-scrollbar {
+    display: none;
+  }
+  .nav-item {
+    white-space: nowrap;
+    flex-shrink: 0;
   }
   .main-content {
     padding: 1rem;

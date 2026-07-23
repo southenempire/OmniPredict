@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { createPublicClient, http, formatEther, parseEther, createWalletClient, custom } from 'viem';
 import { flareTestnet } from 'viem/chains';
 import { useWallets } from '@privy-io/react-auth';
+import toast from 'react-hot-toast';
 import OmniPredictMarketABI from '../abis/OmniPredictMarket.json';
 
 // Local Hardhat Node Client
@@ -194,7 +195,7 @@ export function useFlareContracts() {
   const createMarket = async (title: string, symbol: string, targetPrice: number, isAbove: boolean, endDateStr: string) => {
     const wallet = wallets[0];
     if (!wallet) {
-      alert("Please connect your wallet first!");
+      toast.error("Please connect your wallet first!");
       return;
     }
     try {
@@ -214,18 +215,18 @@ export function useFlareContracts() {
         value: parseEther('10') // 10 FLR creation fee
       });
       await publicClient.waitForTransactionReceipt({ hash });
-      alert(`Market Created successfully! Hash: ${hash.slice(0,10)}...`);
+      toast.success(`Market Created successfully! Hash: ${hash.slice(0,10)}...`);
       fetchMarkets();
     } catch (err: any) {
       console.error("Create market failed:", err);
-      alert(`Transaction failed: ${err.message || 'Unknown error'}`);
+      toast.error(`Transaction failed: ${err.message || 'Unknown error'}`);
     }
   };
 
   const placeBet = async (marketId: string, prediction: 'yes' | 'no', amount: number) => {
     const wallet = wallets[0];
     if (!wallet) {
-      alert("Please connect your wallet first!");
+      toast.error("Please connect your wallet first!");
       return;
     }
 
@@ -263,13 +264,13 @@ export function useFlareContracts() {
       };
       setTrades(prev => [newTrade, ...prev]);
       
-      alert(`Transaction confirmed! Staked ${amount} FLR on '${prediction.toUpperCase()}'. Hash: ${hash.slice(0,10)}...`);
+      toast.success(`Transaction confirmed! Staked ${amount} FLR on '${prediction.toUpperCase()}'. Hash: ${hash.slice(0,10)}...`);
       
       // Trigger a re-fetch of markets to update liquidity pools
       fetchMarkets();
     } catch (err: any) {
       console.error("Bet transaction failed:", err);
-      alert(`Transaction failed: ${err.message || 'Unknown error'}`);
+      toast.error(`Transaction failed: ${err.message || 'Unknown error'}`);
     }
   };
 
@@ -279,7 +280,7 @@ export function useFlareContracts() {
 
     const wallet = wallets[0];
     if (!wallet) {
-      alert("Please connect your wallet first!");
+      toast.error("Please connect your wallet first!");
       return;
     }
 
@@ -304,12 +305,12 @@ export function useFlareContracts() {
       await publicClient.waitForTransactionReceipt({ hash });
 
       setTrades(prev => prev.filter(t => t.id !== tradeId));
-      alert(`Successfully claimed winnings for market ${trade.marketId}! Hash: ${hash.slice(0,10)}...`);
+      toast.success(`Successfully claimed winnings for market ${trade.marketId}! Hash: ${hash.slice(0,10)}...`);
       
       fetchMarkets();
     } catch (err: any) {
       console.error("Claim transaction failed:", err);
-      alert(`Claim failed: ${err.shortMessage || err.message || 'Unknown error'}`);
+      toast.error(`Claim failed: ${err.shortMessage || err.message || 'Unknown error'}`);
     }
   };
 
@@ -318,7 +319,7 @@ export function useFlareContracts() {
   };
 
   const purchaseTerminalAccess = (cost: number) => {
-    alert(`Successfully spent ${cost} FLR to unlock OmniAI Terminal for 24 hours!`);
+    toast.success(`Successfully spent ${cost} FLR to unlock OmniAI Terminal for 24 hours!`);
     setHasTerminalAccess(true);
   };
 

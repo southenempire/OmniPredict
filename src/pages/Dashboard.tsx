@@ -41,17 +41,19 @@ export const Dashboard = () => {
   };
 
   const now = new Date();
-  const filteredMarkets = markets.filter(m => {
-    const isExpired = new Date(m.endTime) < now;
-    
-    if (activeFilter === 'past') {
-      return isExpired;
-    }
-    
-    if (isExpired) return false;
-    
-    return activeFilter === 'all' || m.type === activeFilter;
-  });
+  const filteredMarkets = markets
+    .filter(m => {
+      const isExpired = new Date(m.endTime) < now;
+      if (activeFilter === 'past') return isExpired;
+      return activeFilter === 'all' || m.type === activeFilter;
+    })
+    .sort((a, b) => {
+      const aExpired = new Date(a.endTime) < now;
+      const bExpired = new Date(b.endTime) < now;
+      if (aExpired && !bExpired) return 1;
+      if (!aExpired && bExpired) return -1;
+      return 0;
+    });
 
   return (
     <div className="app-container">
